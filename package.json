@@ -1,0 +1,50 @@
+{
+  "name": "@peter.naydenov/dt-queries",
+  "description": "Set of DT-toolbox query functions",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "Peter Naydenov",
+  "keywords": [
+    "compare",
+    "identical",
+    "change",
+    "same",
+    "different",
+    "missing",
+    "merge",
+    "add",
+    "update",
+    "overwrite",
+    "insert",
+    "combine",
+    "dt",
+    "DT-model"
+  ],
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "mocha test",
+    "cover": "c8 mocha test"
+  },
+  "devDependencies": {
+    "c8": "^7.13.0",
+    "chai": "^4.3.7",
+    "dt-toolbox": "^6.0.0",
+    "mocha": "^10.2.0"
+  },
+  "c8": {
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "node_modules",
+      "test",
+      "test-data"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ]
+  }
+}
