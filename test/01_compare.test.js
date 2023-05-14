@@ -58,12 +58,12 @@ it ( 'Identical. Fully identical', () => {
         expect ( res ).to.have.property ( 'query' )
 
         data.forEach ( (line,i) => {
-                    const 
+                    let 
                           [ name, fd, breadcrumbs, links ] = line
                         , [ uName, ufd, uBreadcrumbs, ulinks ] = d[i]
                         ;
                     expect ( name === uName )
-                    expect ( breadcrumbs).to.be.equal ( uBreadcrumbs ) 
+                    expect ( breadcrumbs ).to.be.equal ( uBreadcrumbs ) 
                     if ( fd instanceof Array ) { // length of arrays should be the same
                             expect ( fd.length ).to.be.equal ( ufd.length )
                         }
@@ -78,8 +78,7 @@ it ( 'Identical. Fully identical', () => {
 it ( 'Identical. Different objects', () => {
         // Extract only identical parts -> key/value pairs
         const 
-              d   = dtbox.flat ( a )
-            , flat = dtbox.init ( a )
+              flat = dtbox.init ( a )
             , changed = {
                               name: 'Stefan'
                             , friends : [ 'Ivan', 'Miroslav' ]
@@ -100,7 +99,7 @@ it ( 'Identical. Different objects', () => {
             ;
         let i = 0;
         data.forEach ( line => {
-                            const [ name, fo, breadcrumbs, links ] = line;
+                            const [ name, fo,, links ] = line;
                             if ( name === 'root' ) {
                                         expect ( fo ).to.not.have.property ( 'name' )
                                         i++
@@ -150,7 +149,7 @@ it ( 'Change', () => {
             , sport = null
             ;
         data.forEach ( line => {
-                    const [ name, fd, breadcrumbs, edges ] = line;
+                    const [ name, fd ] = line;
                     if ( name === 'root' ) {
                                 expect ( fd ).to.have.property ( 'name' )
                                 expect ( fd.name ).to.be.equal ( 'Stefan')
@@ -266,7 +265,7 @@ it ( 'Missing', () => {
             ;
         let i = 0;
         data.forEach ( line => {
-                      const [ name, fd, breadcrumbs, edges ] = line;
+                      const [ name, fd ] = line;
 
                       if ( name === 'root' ) {
                                   let props = Object.keys(fd);
@@ -325,7 +324,7 @@ it ( 'same', () => {
           , j = 0
           ;
       data.forEach ( line => {
-                  const [ name, fd, breadcrumbs, edges ] =  line;
+                  const [ name, fd ] =  line;
 
                   if ( name === 'root' ) {
                             expect ( fd ).to.not.have.property ( 'name' )

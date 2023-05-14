@@ -8,7 +8,8 @@
 import { expect } from "chai"
 import dtbox from "dt-toolbox"
 import {
-           add   
+             add   
+           , update
       } from '../src/main.js'
 
 
@@ -94,6 +95,42 @@ it ( 'Update', () => {
   /**
    *   Update: Result will ignore all new props and will update existing ones.
    */
+  const 
+          flat = dtbox.init ( a )
+        , changed = {
+                          name: 'Stefan'
+                        , friends : [ 'Miroslav' ]
+                        , change : 'yes'
+                        , personal : {
+                                          age     : 30
+                                        , hobbies : { 
+                                                          sport  : [ 'ski', 'fencing', 'skating', 'running' ]
+                                                        , photography : [ 'retouch', 'photoshop', 'portrait']
+                                                    }
+                                    }
+                }
+        ;
+  const 
+        res  = flat.query ( update, dtbox.init(changed)   )
+      , data = res.model ( () => ({as:'std'}))
+      ;
+
+  expect ( data.name ).to.be.equal ( 'Stefan' )
+  expect ( data ).to.not.have.property ( 'change' )
+  expect ( data.friends ).to.have.length ( 1 )
+  expect ( data.friends ).to.contains ( 'Miroslav' )
+
+  expect ( data.personal).to.have.property ( 'eyes' )
+  expect ( data.personal).to.have.property ( 'sizes' )
+  expect ( data.personal).to.have.property ( 'hobbies' )
+
+  expect ( data.personal.hobbies ).to.have.property ( 'music')
+  expect ( data.personal.hobbies ).to.have.property ( 'sport')
+  expect ( data.personal.hobbies ).to.not.have.property ( 'photography' )
+
+  expect ( data.personal.hobbies.sport ).to.have.length ( 4 )
+  expect ( data.personal.hobbies.sport[0] ).to.be.equal ( 'ski' )
+  expect ( data.personal.hobbies.music ).to.have.length ( 4 )
 })
 
 it ( 'Overwrite' )

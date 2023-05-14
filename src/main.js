@@ -23,12 +23,14 @@ import missing   from './compareMethods/missing.js'
 import same      from './compareMethods/same.js'
 
 import add from './mergeMethods/add.js'
+import update from './mergeMethods/update.js'
 
 
 
 export {
             // Merge queries
               add
+            , update
 
             // Compare queries
             , change
