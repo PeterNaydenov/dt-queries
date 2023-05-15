@@ -10,6 +10,7 @@ import dtbox from "dt-toolbox"
 import {
              add   
            , update
+           , overwrite
       } from '../src/main.js'
 
 
@@ -133,7 +134,49 @@ it ( 'Update', () => {
   expect ( data.personal.hobbies.music ).to.have.length ( 4 )
 })
 
-it ( 'Overwrite' )
+
+
+it.only ( 'Overwrite', () => {
+  /**
+   *   Overwrite: Result will add all new props and will update existing ones.
+   */
+  const 
+          flat = dtbox.init ( a )
+        , changed = {
+                          name: 'Stefan'
+                        , friends : [ '...','Miroslav' ] // if first element is equal to '...', existing array should be extended 
+                        , change : 'yes'
+                        , personal : {
+                                          age     : 30
+                                        , hobbies : { 
+                                                          sport  : [ 'running' ] // first element is not empty, so array will be overwritten
+                                                        , photography : [ 'retouch', 'photoshop', 'portrait']
+                                                    }
+                                    }
+                }
+        ;
+  const 
+        res  = flat.query ( overwrite, dtbox.init(changed)   )
+      , data = res.model ( () => ({as:'std'}))
+      , { music, sport, photography } = data.personal.hobbies
+      ;
+
+  expect ( data.name ).to.be.equal ( 'Stefan' )
+  expect ( data ).to.have.property ( 'change' )
+  expect ( data.friends ).to.have.length ( 4 ) // Should be extended because the first element is '...'
+
+  expect ( data.personal.age ).to.be.equal ( 30 )
+  expect ( data.personal.eyes ).to.be.equal ( 'blue' )
+  expect ( data.personal ).to.have.property ( 'sizes' )
+
+  expect ( sport ).to.have.length ( 1 )
+  expect ( sport[0] ).to.be.equal ( 'running' )
+  expect ( photography ).to.have.length ( 3 )
+  expect ( music ).to.have.length ( 4 )
+}) // it overwrite
+
+
+
 it ( 'Combine' )
 it ( 'Append' )
 it ( 'Prepend' )
