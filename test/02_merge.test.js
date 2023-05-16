@@ -8,7 +8,8 @@
 import { expect } from "chai"
 import dtbox from "dt-toolbox"
 import {
-             add   
+             add
+           , insert   
            , update
            , overwrite
       } from '../src/main.js'
@@ -136,7 +137,7 @@ it ( 'Update', () => {
 
 
 
-it.only ( 'Overwrite', () => {
+it ( 'Overwrite', () => {
   /**
    *   Overwrite: Result will add all new props and will update existing ones.
    */
@@ -174,6 +175,38 @@ it.only ( 'Overwrite', () => {
   expect ( photography ).to.have.length ( 3 )
   expect ( music ).to.have.length ( 4 )
 }) // it overwrite
+
+
+it ( 'Insert', () => {
+  const 
+          flat = dtbox.init ( a )
+        , changed = {
+                          name: 'Stefan'
+                        , friends : { name: 'Miroslav' }  
+                        , change : 'yes'
+                        , personal : {
+                                          age     : 30
+                                        , hobbies : { 
+                                                          sport  : [ 'fencing', 'running', 'climbing' ]
+                                                        , photography : [ 'retouch', 'photoshop', 'portrait']
+                                                    }
+                                    }
+                }
+        ;
+  const 
+        res  = flat.query ( insert, dtbox.init(changed)   )
+      , data = res.model ( () => ({as:'std'}))
+      ;
+
+expect ( data.name ).to.be.equal ( 'Peter' )
+expect ( data ).to.not.have.property ( 'change' )
+expect ( data.friends ).to.have.length ( 4 )
+
+const hobbies = data.personal.hobbies;
+expect ( data.personal.age ).to.be.equal ( 49 )
+expect ( hobbies.sport ).to.have.length ( 5 )
+expect ( hobbies ).to.have.property ( 'photography' )
+}) // it insert
 
 
 
