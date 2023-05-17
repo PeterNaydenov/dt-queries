@@ -9,6 +9,7 @@ import { expect } from "chai"
 import dtbox from "dt-toolbox"
 import {
              add
+           , append
            , insert   
            , update
            , overwrite
@@ -210,8 +211,48 @@ expect ( hobbies ).to.have.property ( 'photography' )
 
 
 
+it ( 'Append', () => {
+/**
+*   Append: Change value if only the update has same key. Append update value to old one. 
+    - new values are: old value + new value separated by ',';
+    - arrays are original arrays + new values;
+*/
+  const 
+          flat = dtbox.init ( a )
+        , changed = {
+                          name: 'Stefan'
+                        , friends : [ 'Miroslav' ]
+                        , change : 'yes'
+                        , personal : {
+                                          age     : 30
+                                        , eyes    : 'brown'
+                                        , hobbies : { 
+                                                          sport  : [ 'running' ]
+                                                        , photography : [ 'retouch', 'photoshop', 'portrait']
+                                                    }
+                                    }
+                }
+        ;
+  const 
+        res  = flat.query ( append, dtbox.init(changed)   )
+      , data = res.model ( () => ({as:'std'}))
+      , { music, sport, photography } = data.personal.hobbies
+      ;
+  expect ( data.name ).to.be.equal ( 'Peter,Stefan' )
+  expect ( data.friends ).to.have.length ( 4 )
+  expect ( data.friends ).to.contains ( 'Miroslav' )
+  expect ( data.personal.age ).to.be.equal ( '49,30' )
+  expect ( data.personal.eyes ).to.be.equal ( 'blue,brown' )
+  expect ( sport ).to.have.length ( 4 )
+
+  expect ( photography ).to.be.equal ( undefined )
+  expect ( music ).to.not.be.equal ( undefined )
+
+}) // it append
+
+
+
 it ( 'Combine' )
-it ( 'Append' )
 it ( 'Prepend' )
 
 }) // describe

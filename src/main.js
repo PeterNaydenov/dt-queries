@@ -23,6 +23,7 @@ import missing   from './compareMethods/missing.js'
 import same      from './compareMethods/same.js'
 
 import add       from './mergeMethods/add.js'
+import append    from './mergeMethods/append.js'
 import insert    from './mergeMethods/insert.js'
 import update    from './mergeMethods/update.js'
 import overwrite from './mergeMethods/overwrite.js'
@@ -32,6 +33,7 @@ import overwrite from './mergeMethods/overwrite.js'
 export {
             // Merge queries
               add
+            , append
             , insert
             , overwrite
             , update
