@@ -27,6 +27,7 @@ import append    from './mergeMethods/append.js'
 import insert    from './mergeMethods/insert.js'
 import update    from './mergeMethods/update.js'
 import overwrite from './mergeMethods/overwrite.js'
+import prepend   from './mergeMethods/prepend.js'
 
 
 
@@ -36,6 +37,7 @@ export {
             , append
             , insert
             , overwrite
+            , prepend
             , update
 
             // Compare queries

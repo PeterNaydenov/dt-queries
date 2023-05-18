@@ -293,7 +293,7 @@ it ( 'Missing', () => {
 
 
 
-it ( 'same', () => {
+it ( 'Same', () => {
   /**
    *   Should show data available in update according original data.
    *  - no consideration of existing values

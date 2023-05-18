@@ -11,8 +11,9 @@ import {
              add
            , append
            , insert   
-           , update
            , overwrite
+           , prepend
+           , update
       } from '../src/main.js'
 
 
@@ -252,7 +253,47 @@ it ( 'Append', () => {
 
 
 
+it ( 'Prepend', () => {
+/**
+*   Prepend: Change value if only the update has same key. Prepend update value to old one. 
+    - new values are: new value + original value separated by ',';
+    - arrays are original arrays + new values;
+*/
+  const 
+          flat = dtbox.init ( a )
+        , changed = {
+                          name: 'Stefan'
+                        , friends : [ 'Miroslav' ]
+                        , change : 'yes'
+                        , personal : {
+                                          age     : 30
+                                        , eyes    : 'brown'
+                                        , hobbies : { 
+                                                          sport  : [ 'running' ]
+                                                        , photography : [ 'retouch', 'photoshop', 'portrait']
+                                                    }
+                                    }
+                }
+        ;
+  const 
+        res  = flat.query ( prepend, dtbox.init(changed)   )
+      , data = res.model ( () => ({as:'std'}))
+      , { music, sport, photography } = data.personal.hobbies
+      ;
+  expect ( data.name ).to.be.equal ( 'Stefan,Peter' )
+  expect ( data.friends ).to.have.length ( 4 )
+  expect ( data.friends ).to.contains ( 'Miroslav' )
+  expect ( data.personal.age ).to.be.equal ( '30,49' )
+  expect ( data.personal.eyes ).to.be.equal ( 'brown,blue' )
+  expect ( sport ).to.have.length ( 4 )
+
+  expect ( photography ).to.be.equal ( undefined )
+  expect ( music ).to.not.be.equal ( undefined )
+
+}) // it append
+
+
+
 it ( 'Combine' )
-it ( 'Prepend' )
 
 }) // describe
