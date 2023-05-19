@@ -10,6 +10,7 @@ import dtbox from "dt-toolbox"
 import {
              add
            , append
+           , combine
            , insert   
            , overwrite
            , prepend
@@ -294,6 +295,33 @@ it ( 'Prepend', () => {
 
 
 
-it ( 'Combine' )
+it.only ( 'Combine', () => {
+  /**
+   *  Combine : Preserve all values from incoming and original data
+   */
+  const 
+          flat = dtbox.init ( a )
+        , changed = {
+                          name:  'Stefan'
+                        , friends : 'Miroslav' 
+                        , change : 'yes'
+                        , personal : {
+                                          age     : 30
+                                        , eyes    : 'brown'
+                                        , hobbies : { 
+                                                          sport  : [ 'running' ]
+                                                        , photography : [ 'retouch', 'photoshop', 'portrait']
+                                                    }
+                                    }
+                }
+        ;
+  const 
+        res  = flat.query ( combine, dtbox.init(changed)   )
+      , data = res.model ( () => ({as:'std'}))
+      // , { music, sport, photography } = data.personal.hobbies
+      ;
+      console.log ( data ) 
+      // console.log ( data.personal.hobbies )
+})
 
 }) // describe

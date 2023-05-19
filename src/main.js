@@ -24,6 +24,7 @@ import same      from './compareMethods/same.js'
 
 import add       from './mergeMethods/add.js'
 import append    from './mergeMethods/append.js'
+import combine   from './mergeMethods/combine.js'
 import insert    from './mergeMethods/insert.js'
 import update    from './mergeMethods/update.js'
 import overwrite from './mergeMethods/overwrite.js'
@@ -39,6 +40,7 @@ export {
             , overwrite
             , prepend
             , update
+            , combine
 
             // Compare queries
             , change
