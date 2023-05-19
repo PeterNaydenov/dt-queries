@@ -295,7 +295,7 @@ it ( 'Prepend', () => {
 
 
 
-it.only ( 'Combine', () => {
+it ( 'Combine', () => {
   /**
    *  Combine : Preserve all values from incoming and original data
    */
@@ -318,10 +318,17 @@ it.only ( 'Combine', () => {
   const 
         res  = flat.query ( combine, dtbox.init(changed)   )
       , data = res.model ( () => ({as:'std'}))
-      // , { music, sport, photography } = data.personal.hobbies
+      , { photography } = data.personal.hobbies
       ;
-      console.log ( data ) 
-      // console.log ( data.personal.hobbies )
+  expect ( data ).to.have.property ( 'change' )
+  expect ( data.name ).to.have.length ( 2 )
+  expect ( data.name ).to.contains ( 'Stefan')
+  expect (data.name  ).to.contains ( 'Peter' )
+  expect ( data.friends ).to.have.length ( 4 )
+
+  expect ( data.personal.age ).to.have.length ( 2 )
+  expect ( data.personal.eyes ).to.have.length ( 2 )
+  expect ( photography ).to.not.be.null
 })
 
 }) // describe
