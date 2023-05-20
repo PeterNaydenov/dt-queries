@@ -2,7 +2,7 @@
 
 *Under heavy development*
 
-Set of DT-toolbox query functions. You can use them for learning purposes or inspiration for how to build your own query functions for DT-Toolbox.
+Set of DT-toolbox query functions. You can use them for **learning purposes** or inspiration for how to build your own query functions for DT-Toolbox.
 
 
 ## How to use the library
@@ -19,6 +19,8 @@ const result = dt.query ( identical, otherDtObject )
 ```
 
 ## Query functions
+
+
 
 
 
