@@ -20,6 +20,26 @@ const result = dt.query ( identical, otherDtObject )
 
 ## Query functions
 
+### Merge operations
+- Add
+- Update
+- Overwrite
+- Insert
+- Append
+- Prepend
+- Combine
+
+
+
+### Compare operations
+- Identical
+- Change
+- Different
+- Missing
+- Same
+
+
+
 
 
 
