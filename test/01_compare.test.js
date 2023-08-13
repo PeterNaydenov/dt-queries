@@ -51,11 +51,12 @@ it ( 'Identical. Fully identical', () => {
             , data = res.export ()
             ;
 
-        expect ( res ).to.have.property ( 'insert' )
+        expect ( res ).to.have.property ( 'insertSegment' )
         expect ( res ).to.have.property ( 'export' )
         expect ( res ).to.have.property ( 'copy' )
         expect ( res ).to.have.property ( 'model' )
         expect ( res ).to.have.property ( 'query' )
+        expect ( res ).to.have.property ( 'listSegments' )
 
         data.forEach ( (line,i) => {
                     let 

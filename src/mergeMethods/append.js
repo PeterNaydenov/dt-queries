@@ -9,7 +9,7 @@
 
 
 function append ( storage, inData ) {
-    storage.look ( ({ name, flatData, breadcrumbs}) => {
+    storage.look ( ({ name, flatData, breadcrumbs, next }) => {
                 const 
                       inRow = inData.index(breadcrumbs)
                     , isArray = flatData instanceof Array
@@ -18,7 +18,7 @@ function append ( storage, inData ) {
                 if ( !inRow ) { //
                             storage.set ( name, flatData )
                             if ( breadcrumbs.includes('/') )   storage.connect([breadcrumbs])
-                            return 'next'
+                            return next ()
                     }
 
                 const
@@ -49,7 +49,7 @@ function append ( storage, inData ) {
                             storage.set ( name, obj )
                     }
                 if ( breadcrumbs.includes('/') )   storage.connect([breadcrumbs])
-                return 'next'
+                return next ()
         }) // look storage
 } // append func.
 

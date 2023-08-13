@@ -9,7 +9,7 @@
 function missing ( flatStore, update ) {
 
         if ( !update.index && typeof(update.index)!== 'function' )   return null   // Update should be a dt-object.
-        flatStore.look ( ({ name, flatData, breadcrumbs }) => {   // Look for the data
+        flatStore.look ( ({ name, flatData, breadcrumbs, next }) => {   // Look for the data
                         const 
                               isArray = flatData instanceof Array
                             , upLine = update.index(breadcrumbs)
@@ -17,7 +17,7 @@ function missing ( flatStore, update ) {
 
                         if ( !upLine ) {
                                     flatStore.set ( name, flatData )
-                                    return 'next'
+                                    return next ()
                             }
                         
                         const 
@@ -44,13 +44,13 @@ function missing ( flatStore, update ) {
                                             })
                                 flatStore.set ( name, r )
                             }
-                        return 'next'
+                        return next ()
             }) // look data
 
-        flatStore.look (({ links }) => {
+        flatStore.look (({ links, next }) => {
                         const theList = links.map ( ([k,v]) => `${k}/${v}`);
                         flatStore.connect ( theList )
-                        return 'next'
+                        return next ()
             }) // look links
 
 } // missing func.

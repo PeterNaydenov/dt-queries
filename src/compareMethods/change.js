@@ -14,7 +14,7 @@ function change ( flatStore, update ) {
 
         if ( !update.index && typeof(update.index)!== 'function' )   return null
 
-        flatStore.look ( ({ name, flatData, breadcrumbs }) => {  // Look for data
+        flatStore.look ( ({ name, flatData, breadcrumbs, next }) => {  // Look for data
                         const 
                               isArray = flatData instanceof Array
                             , upObject = update.index(breadcrumbs)
@@ -56,7 +56,7 @@ function change ( flatStore, update ) {
                                     else             flatStore.set ( name, {})
                             }
                         if ( breadcrumbs.includes('/') )   flatStore.connect ([breadcrumbs])
-                        return 'next'
+                        return next ()
             }) // look data
 } // change func.
 

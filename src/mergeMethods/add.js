@@ -8,15 +8,15 @@
 function add ( flatStore, update, index ) {
     const linkBuffer = [];
     // Copy the existing data
-    flatStore.look ( ({ name, flatData, breadcrumbs }) => { 
+    flatStore.look ( ({ name, flatData, breadcrumbs, next }) => { 
                 flatStore.set ( name, flatData )
                 if ( breadcrumbs.includes('/') )   flatStore.connect ([breadcrumbs])
-                return 'next'
+                return next ()
         })
 
     // Search for new data
     update.query ((upStore) => {
-                        upStore.look ( ({ name, flatData:upData, breadcrumbs }) => {
+                        upStore.look ( ({ name, flatData:upData, breadcrumbs, next }) => {
                                     const
                                             isArray = upData instanceof Array
                                           , existingRow = index ( breadcrumbs )
@@ -28,7 +28,7 @@ function add ( flatStore, update, index ) {
                                                         , parent = breadcrumbs.replace( search, '').split('/').pop()
                                                         ;
                                                 linkBuffer.push ( `${parent}/${name}` )
-                                                return 'next'
+                                                return next ()
                                         }
 
                                     const [ , orFd ] = existingRow;
@@ -43,7 +43,7 @@ function add ( flatStore, update, index ) {
                                                                 if ( orFd[k] === undefined )   flatStore.save ( name, k, v )
                                                         })
                                         }
-                                    return 'next'
+                                    return next ()
                             })
                 }) // update.query
     if ( linkBuffer.length > 0 )    flatStore.connect ( linkBuffer )

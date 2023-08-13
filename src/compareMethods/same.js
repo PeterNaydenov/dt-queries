@@ -10,7 +10,7 @@ function same ( flatStore, update ) {
 
         if ( !update.index && typeof(update.index)!== 'function' )   return null
 
-        flatStore.look ( ({ name, flatData, breadcrumbs }) => {
+        flatStore.look ( ({ name, flatData, breadcrumbs, next }) => {
                         const 
                               upLine = update.index(breadcrumbs)
                             , isArray = flatData instanceof Array
@@ -18,7 +18,7 @@ function same ( flatStore, update ) {
                             
                         if ( !upLine ) {  
                                 flatStore.set ( name, isArray ? [] : {})  
-                                return 'next'
+                                return next ()
                             }
                         const 
                               [ , upFd ] = upLine
@@ -42,13 +42,13 @@ function same ( flatStore, update ) {
                                             })
                                     flatStore.set ( name, r )
                             }
-                        return 'next'
+                        return next ()
             }) // look data
 
-        flatStore.look (({ links }) => {
+        flatStore.look (({ links, next }) => {
                         const theList = links.map ( ([k,v]) => `${k}/${v}`);
                         flatStore.connect ( theList )
-                        return 'next'
+                        return next ()
             }) // look links
 } // same func.
 

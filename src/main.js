@@ -30,6 +30,9 @@ import update    from './mergeMethods/update.js'
 import overwrite from './mergeMethods/overwrite.js'
 import prepend   from './mergeMethods/prepend.js'
 
+import keepSegments   from './extractMethods/keepSegments.js'
+import removeSegments from './extractMethods/removeSegments.js'
+
 
 
 export {
@@ -48,6 +51,10 @@ export {
             , identical
             , missing
             , same
+
+            // Extract queries
+            , keepSegments
+            , removeSegments
         }
  
 

@@ -11,7 +11,7 @@
 
 function overwrite ( storage, inData ) {
     const crumbs = [];
-    storage.look ( ({ name, flatData, breadcrumbs}) => {
+    storage.look ( ({ name, flatData, breadcrumbs, next }) => {
                 const 
                       inRow = inData.index(breadcrumbs)
                     , isArray = flatData instanceof Array
@@ -20,7 +20,7 @@ function overwrite ( storage, inData ) {
                 if ( !inRow ) { //
                             storage.set ( name, flatData )
                             if ( breadcrumbs.includes('/') )   storage.connect([breadcrumbs])
-                            return 'next'
+                            return next ()
                     }
                 const
                       [ , inFlat ] = inRow
@@ -51,16 +51,16 @@ function overwrite ( storage, inData ) {
                             storage.set ( name, obj )
                     }
                 if ( breadcrumbs.includes('/') )   storage.connect([breadcrumbs])
-                return 'next'
+                return next ()
         }) // look storage
 
     inData.query ( inStorage => {   // Fulfill the new structures from incoming data
-                    inStorage.look (({name,flatData,breadcrumbs}) => {
+                    inStorage.look (({name,flatData,breadcrumbs, next }) => {
                                     if ( !crumbs.includes(breadcrumbs) ) {
                                                 storage.set ( name, flatData )
                                                 storage.connect([breadcrumbs])
                                         }
-                                    return 'next'
+                                    return next ()
                             }) // look inStorage
         }) // query inData
 } // overwrite func.

@@ -6,12 +6,12 @@
 
 function different ( flatStore, update, index ) {
         update.query ( upStore => {
-                            upStore.look (({ name, breadcrumbs, flatData:uData }) => {   // Look for data
+                            upStore.look (({ name, breadcrumbs, flatData:uData, next }) => {   // Look for data
                                             const orgLine = index ( breadcrumbs );
 
                                             if ( !orgLine ) {
                                                     flatStore.set ( name, uData )
-                                                    return 'next'
+                                                    return next ()
                                                 }
                                             const 
                                                   upIsArray = uData instanceof Array
@@ -25,7 +25,7 @@ function different ( flatStore, update, index ) {
                                                         const identical = ( uData.length === orgFd.length ) && ( uData.every ( (el,i) => el === orgFd[i] ));
                                                         if ( !identical ) {  
                                                                 flatStore.set ( name, uData )
-                                                                return 'next'
+                                                                return next ()
                                                             }
                                                         const l = []
                                                         uData.forEach ( el => {
@@ -44,13 +44,13 @@ function different ( flatStore, update, index ) {
                                                                 })
                                                         flatStore.set ( name, r )
                                                 }                                            
-                                            return 'next'
+                                            return next ()
                                     }) // look data
 
-                            upStore.look (({ links })=> { // Look for links
+                            upStore.look (({ links, next })=> { // Look for links
                                             const list = links.map ( ([k,v]) => `${k}/${v}`);
                                             flatStore.connect ( list )
-                                            return 'next'
+                                            return next ()
                                     }) // look links
                 }) // update query
 } // different func.
