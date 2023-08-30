@@ -10,7 +10,7 @@
 
 function combine ( storage, inData ) {
     const crumbs = [];
-    storage.look ( ({ name, flatData, breadcrumbs, links}) => {
+    storage.look ( ({ name, flatData, breadcrumbs, links, next }) => {
                 let inRow;
                 const isArray = flatData instanceof Array;
                 crumbs.push ( breadcrumbs )
@@ -67,7 +67,7 @@ function combine ( storage, inData ) {
                                 }
                             if ( breadcrumbs.includes('/'))   storage.connect ([breadcrumbs])
                             storage.connect ( linkArr )
-                            return 'next'
+                            return next ()
                     } // if isArray
 
 
@@ -114,21 +114,21 @@ function combine ( storage, inData ) {
                 // Fulfill key/values that only incoming objects has
                 inData.query ( inStorage => { 
                                             let linkProps = links.map ( ([,child]) => child );
-                            inStorage.look (({key,value, breadcrumbs:inBreadcrumbs}) => {
-                                            if ( inBreadcrumbs !== breadcrumbs )   return 'next'  // Scan corresponding objects only
+                            inStorage.look (({key,value, breadcrumbs:inBreadcrumbs, next }) => {
+                                            if ( inBreadcrumbs !== breadcrumbs )   return next ()  // Scan corresponding objects only
                                             if ( linkProps.includes(key) )   return
                                             if ( !entryKeys.includes(key) && key!= null )   storage.save ( name, key, value )
                                     })
                     })
-                return 'next'
+                return next ()
         }) // look storage
 
     inData.query ( inStorage => {   // Fulfill the new structures from incoming data
-                    inStorage.look (({ name, flatData, breadcrumbs }) => {
+                    inStorage.look (({ name, flatData, breadcrumbs, next }) => {
                                     if ( !crumbs.includes(breadcrumbs) ) {
                                                 storage.set ( name, flatData )
                                                 storage.connect([breadcrumbs])
-                                                return 'next'
+                                                return next ()
                                         }
                             }) // look inStorage
         }) // query inData

@@ -8,7 +8,7 @@
  */
 
 function update ( store, updateObject ) {
-        store.look ( ({ name, flatData, breadcrumbs }) => {
+        store.look ( ({ name, flatData, breadcrumbs, next }) => {
                     const 
                           inUpdateLine = updateObject.index(breadcrumbs)
                         , isArray = flatData instanceof Array
@@ -17,7 +17,7 @@ function update ( store, updateObject ) {
                     if ( !inUpdateLine ) {   // If no update - take original data 
                                 store.set ( name, flatData )
                                 if ( breadcrumbs.includes('/') )   store.connect ([breadcrumbs])
-                                return 'next'
+                                return next ()
                         }
                     const 
                           [ ,inData ] = inUpdateLine
@@ -39,7 +39,7 @@ function update ( store, updateObject ) {
                                         })
                         }
                     if ( breadcrumbs.includes('/') )   store.connect ([breadcrumbs])
-                    return 'next'
+                    return next ()
             }) // look
 } // update func.
 

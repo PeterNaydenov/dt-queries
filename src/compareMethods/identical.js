@@ -5,7 +5,7 @@ function identical ( flatStore, update ) {
 
         if ( !update.index && typeof(update.index)!== 'function' )   return null
 
-        flatStore.look ( ({ name, flatData, breadcrumbs }) => {
+        flatStore.look ( ({ name, flatData, breadcrumbs, next }) => {
                         const 
                               isArray = flatData instanceof Array
                             , upObject = update.index(breadcrumbs)
@@ -15,7 +15,7 @@ function identical ( flatStore, update ) {
                                       upData = upObject[1]
                                     , upIsArray = upData instanceof Array
                                     ;
-                                if ( isArray != upIsArray )   return 'next'
+                                if ( isArray != upIsArray )   return next ()
                                 if ( isArray ) {
                                         const l = [];
                                         flatData.forEach ( (el,i) => {
@@ -35,7 +35,7 @@ function identical ( flatStore, update ) {
                                     }
                                 if ( breadcrumbs.includes('/') )    flatStore.connect ([breadcrumbs])
                             }
-                        return 'next'
+                        return next ()
             }) // look data
 } // identical func.
 
