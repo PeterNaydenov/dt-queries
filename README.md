@@ -44,6 +44,10 @@ const result = dt.query ( identical, otherDtObject )
 
 
 
+### Segment Operations
+- SplitSegments: Splits a solid data into multiple data-segments;
+- JoinSegments : Consolidate multiple data-segments in a single solid data;
+- updateState  : Updates the state with new data. Takes only declared data-segments and root data properties;
 
 
 

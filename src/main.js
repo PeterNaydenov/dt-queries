@@ -33,6 +33,10 @@ import prepend   from './mergeMethods/prepend.js'
 import keepSegments   from './extractMethods/keepSegments.js'
 import removeSegments from './extractMethods/removeSegments.js'
 
+import joinSegments  from './state/joinSegments.js'
+import splitSegments from './state/splitSegments.js'
+import updateState   from './state/updateState.js'
+
 
 
 export {
@@ -55,6 +59,11 @@ export {
             // Extract queries
             , keepSegments
             , removeSegments
+
+            // State queries
+            , joinSegments
+            , splitSegments
+            , updateState
         }
  
 
