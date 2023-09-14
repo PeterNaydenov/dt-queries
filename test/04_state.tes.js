@@ -52,6 +52,17 @@ it ( 'Split to segments', () => {
 
 
 
+it ( 'Double segments split == single segments split', () => {    
+      const 
+            r  = dtbox.init ( a ).query ( splitSegments )
+          , r1 = r.export ()                         // Export after first split
+          , r2 = r.query ( splitSegments ).export () // Export after second split
+        ;
+      expect ( r1 ).to.deep.equal ( r2 ) // Expect no difference
+}) // it split segments
+
+
+
 it ( 'Join segments', () => {
     const 
           r = dtbox.init ( a ).query ( splitSegments ).query ( joinSegments )

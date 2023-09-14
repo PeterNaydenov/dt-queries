@@ -3,11 +3,10 @@
  * DT-Toolbox query function for state update.
  * @name updateState
  * @param {dt-store} store - dt-store instance
- * @param {dt-object} changes - Changes converted to dt-object, splited to segments 
+ * @param {dt-object} changes - Changes should come as a dt-object, splited to segments
  * @returns void - Result is stored in the 'store' instance
  */
 function updateState ( store, changes ) {
-    // changes: - expects dt-object
     const 
           changesMainLine = changes.export ('root')[0][1]
         , segmentList     = []
