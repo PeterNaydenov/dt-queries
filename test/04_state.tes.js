@@ -102,6 +102,25 @@ it ( 'Update state', () => {
 }) // it update state
 
 
+it ( 'Update state - change a prop', () => {
+      const data = { 
+                    yo: 'hi'
+                  , wrong: false
+                  , deep : { prop: 12, prop2: 'hi' }
+              }
+      const state = dtbox.init ( data ).query ( splitSegments );
+      const theUpdatedState = state
+                                  .query ( updateState, dtbox.init({ yo: 'hello' }))
+                                  .query ( joinSegments)
+                                  .model( () => ({as:'std'}) )
+
+      expect ( theUpdatedState.yo ).to.be.equal ( 'hello' )
+      expect ( theUpdatedState.wrong ).to.be.false
+      expect ( theUpdatedState.deep.prop ).to.be.equal ( 12 )
+      expect ( theUpdatedState.deep.prop2 ).to.be.equal ( 'hi' )  
+  }) // it update state props
+
+
 }) // describe
 
 

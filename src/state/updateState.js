@@ -56,7 +56,7 @@ function updateState ( store, changes ) {
                 if ( !hasUpdate ) { // Take 
                         store
                             .from ( segmentName )
-                            .look ( ({ name, flatData, breadcrumbs, links }) => {
+                            .look ( ({ name, flatData, breadcrumbs, links, next }) => {
                                         store.set ( name, flatData )
                                         if ( linkCache.hasOwnProperty(breadcrumbs) ) {
                                                         const [ parent, child ] = linkCache[breadcrumbs];
