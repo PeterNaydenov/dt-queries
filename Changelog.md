@@ -1,5 +1,12 @@
 ## Release History
 
+
+
+### 1.0.3 ( 2023-10-28)
+- [x] Dependency update. dt-toolbox@7.3.0;
+
+
+
 ### 1.0.2 (2023-09-16)
 - [x] Fix: `updateState` breaks on copy a not changed root properties;
 
