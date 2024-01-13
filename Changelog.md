@@ -1,6 +1,9 @@
 ## Release History
 
-
+### 1.0.4 ( 2024-01-13)
+- [x] Dev dependency update. dt-toolbox@7.4.1;
+- [x] Dev dependency update. Chai@5.0.0;
+- [x] Dev dependency update. C8@9.1.0;
 
 ### 1.0.3 ( 2023-10-28)
 - [x] Dependency update. dt-toolbox@7.3.0;
