@@ -4,18 +4,33 @@
   "version": "1.0.4",
   "license": "MIT",
   "author": "Peter Naydenov",
-  "main": "src/main.js",
+  "main": "./dist/dt-queries.umd.js",
   "type": "module",
+  "exports": {
+        ".": {
+                  "import": "./dist/dt-queries.esm.mjs",
+                  "require": "./dist/dt-queries.cjs",
+                  "default": "./dist/dt-queries.umd.js"
+                },
+      "./package.json": "./package.json",
+      "./dist/*": "./dist/*",
+      "./src/*": "./src/*"
+  },
   "scripts": {
     "start": "node src/main.js",
     "test": "mocha test",
-    "cover": "c8 mocha test"
+    "cover": "c8 mocha test",
+    "build": "rollup -c"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
     "c8": "^9.1.0",
     "chai": "^5.0.3",
     "dt-toolbox": "^7.4.2",
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "rollup": "^4.9.6"
   },
   "c8": {
     "include": [

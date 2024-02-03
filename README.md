@@ -10,11 +10,17 @@ Library is a list of functions and you can take only the needed one.
 ```js
 import dtbox from 'dt-toolbox'
 import { identical } from '@peter.naydenov/dt-queries'
+// or require it:
+// const identical = require ( '@peter.naydenov/dt-queries').identical;
 
 const dt = dtbox.init ( a ) // a is some standard JS object
 const result = dt.query ( identical, otherDtObject )  
 // 'identiacal' query function expect one extra argument, that should be a dt-object
 ```
+
+
+
+
 
 ## Query functions
 

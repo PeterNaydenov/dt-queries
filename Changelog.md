@@ -1,5 +1,16 @@
 ## Release History
 
+
+
+### 1.1.0 ( 2024-02-03)
+- [x] Dev dependency update. dt-toolbox@7.4.2;
+- [x] Dev dependency update. Chai@5.0.3;
+- [x] Folder 'dist' was added to the project. Includes commonjs, umd and esm versions of the library;
+- [x] Package.json: "exports" section was added. Allows you to use package as commonjs or es6 module without additional configuration;
+ - [x] Rollup was added to the project. Used to build the library versions;
+
+
+
 ### 1.0.4 ( 2024-01-13)
 - [x] Dev dependency update. dt-toolbox@7.4.1;
 - [x] Dev dependency update. Chai@5.0.0;
