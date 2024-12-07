@@ -2,6 +2,13 @@
 
 
 
+### 1.1.1 ( 2024-12-07)
+- [x] Dev dependency update. dt-toolbox@7.4.3;
+- [x] Dev dependency update. Mocha@11.0.1;
+- [x] Dev dependency update. Rollup@4.28.1;
+
+
+
 ### 1.1.0 ( 2024-02-03)
 - [x] Dev dependency update. dt-toolbox@7.4.2;
 - [x] Dev dependency update. Chai@5.0.3;
