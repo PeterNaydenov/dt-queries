@@ -30,7 +30,7 @@
     "chai": "^6.2.2",
     "dt-toolbox": "^7.4.5",
     "mocha": "^11.7.5",
-    "rollup": "^4.60.4"
+    "rollup": "^4.61.0"
   },
    "overrides": {
     "diff": ">=8.0.3",
