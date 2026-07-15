@@ -12,7 +12,8 @@
 function change ( flatStore, update ) {
         const linkBuffer = [];
 
-        if ( !update.index && typeof(update.index)!== 'function' )   return null
+        if ( !update )   return null   // Update is required and must be a dt-object
+        if ( !update.index || typeof(update.index)!== 'function' )   return null
 
         flatStore.look ( ({ name, flatData, breadcrumbs, next }) => {  // Look for data
                         const 

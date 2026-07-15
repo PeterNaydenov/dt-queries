@@ -5,6 +5,7 @@
  */
 
 function different ( flatStore, update, index ) {
+        if ( !update || typeof update.query !== 'function' || !index || typeof index !== 'function' )   return null   // `update` must be a dt-object and `index` must be a function (e.g. `flat.index`)
         update.query ( upStore => {
                             upStore.look (({ name, breadcrumbs, flatData:uData, next }) => {   // Look for data
                                             const orgLine = index ( breadcrumbs );

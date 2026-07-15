@@ -6,6 +6,7 @@
 
 
 function add ( flatStore, update, index ) {
+    if ( !update || typeof update.query !== 'function' || !index || typeof index !== 'function' )   return null   // `update` must be a dt-object and `index` must be a function (e.g. `flat.index`)
     const linkBuffer = [];
     // Copy the existing data
     flatStore.look ( ({ name, flatData, breadcrumbs, next }) => { 

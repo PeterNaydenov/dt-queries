@@ -3,15 +3,16 @@
 
 function identical ( flatStore, update ) {
 
-        if ( !update.index && typeof(update.index)!== 'function' )   return null
+        if ( !update )   return null   // Update is required and must be a dt-object
+        if ( !update.index || typeof(update.index)!== 'function' )   return null
 
         flatStore.look ( ({ name, flatData, breadcrumbs, next }) => {
-                        const 
+                        const
                               isArray = flatData instanceof Array
                             , upObject = update.index(breadcrumbs)
                             ;
                         if ( upObject ) {
-                                const 
+                                const
                                       upData = upObject[1]
                                     , upIsArray = upData instanceof Array
                                     ;
@@ -24,7 +25,7 @@ function identical ( flatStore, update ) {
                                         flatStore.set ( name, l )
                                     }
                                 else {
-                                        const 
+                                        const
                                               m = Object.entries ( flatData )
                                             , r = {}
                                             ;

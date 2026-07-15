@@ -8,7 +8,8 @@
 
 function missing ( flatStore, update ) {
 
-        if ( !update.index && typeof(update.index)!== 'function' )   return null   // Update should be a dt-object.
+        if ( !update )   return null   // Update is required and must be a dt-object
+        if ( !update.index || typeof(update.index)!== 'function' )   return null   // Update should be a dt-object.
         flatStore.look ( ({ name, flatData, breadcrumbs, next }) => {   // Look for the data
                         const 
                               isArray = flatData instanceof Array
