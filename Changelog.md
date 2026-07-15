@@ -2,6 +2,13 @@
 
 
 
+### 1.1.2 ( 2026-07-15)
+- [x] Fix: Compare queries (`identical`, `change`, `same`, `missing`) crashed with `Cannot read properties of null/undefined (reading 'index')` when called without a second argument, with `null`, `undefined`, or a plain (non-dt) object as the update. Each function now guards on `if (!update) return null` before accessing `update.index`, so the call becomes a no-op (the result store is returned unchanged) instead of throwing;
+- [x] Fix: `different` and `add` crashed with a confusing `index is not a function` error when the third `index` argument was missing or not a function. Each function now validates `update` is a dt-object (has `.query`) and `index` is a function, returning `null` on bad input instead of throwing;
+- [x] Tests: Added `test/05_bugfixes.test.js` with regression tests for the fixes above (39 new tests; suite goes from 24 to 63 passing);
+
+
+
 ### 1.1.1 ( 2024-12-07)
 - [x] Dev dependency update. dt-toolbox@7.4.3;
 - [x] Dev dependency update. Mocha@11.0.1;
