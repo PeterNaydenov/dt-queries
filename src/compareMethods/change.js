@@ -10,19 +10,16 @@
  */
 
 function change ( flatStore, update ) {
-        const linkBuffer = [];
-
         if ( !update )   return null   // Update is required and must be a dt-object
         if ( !update.index || typeof(update.index)!== 'function' )   return null
 
         flatStore.look ( ({ name, flatData, breadcrumbs, next }) => {  // Look for data
-                        const 
+                        const
                               isArray = flatData instanceof Array
                             , upObject = update.index(breadcrumbs)
                             ;
-                        let search = null;
                         if ( upObject ) {
-                                const 
+                                const
                                       upData = upObject[1]
                                     , upIsArray = upData instanceof Array
                                     ;
@@ -31,24 +28,18 @@ function change ( flatStore, update ) {
                                     }
                                 else if ( isArray ) {
                                         const identical = (upData.length === flatData.length) && (upData.every ( (el,i) => el === flatData[i] ));
-                                        if ( !identical )  flatStore.set ( name, upData ) 
+                                        if ( !identical )  flatStore.set ( name, upData )
                                         else               flatStore.set ( name, [])
                                     }
                                 else {
-                                        const 
+                                        const
                                               m = Object.entries ( flatData )
                                             , r = {}
                                             ;
                                         m.forEach ( ([k,v]) => {
                                                         const upV = upData[k];
                                                         if ( v !== upV )   r[k] = upV
-                                                        search = update.index ( `${breadcrumbs}/${k}` )
-                                                        if ( search ) {  
-                                                                flatStore.set ( k, search )
-                                                                linkBuffer.push ( `${search[2]}/${search[0]}` )
-                                                                search = null
-                                                            }
-                                                    })
+                                                })
                                         flatStore.set ( name, r )
                                     }
                             } // if upObject

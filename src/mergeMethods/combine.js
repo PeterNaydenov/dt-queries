@@ -21,11 +21,11 @@ function combine ( storage, inData ) {
                                 , linkArr = []
                                 ;
                             flatData.forEach ( (el,i) => {  // Check for extra incoming structures
-                                        const 
+                                        const
                                               checkIndex = `${breadcrumbs}/${i}`
                                             , extraRow = inData.index( checkIndex )
                                             ;
-                                        if ( !extraRow ) {   
+                                        if ( !extraRow ) {
                                                     arr.push ( el )
                                             }
                                         else {
@@ -33,9 +33,11 @@ function combine ( storage, inData ) {
                                                           extraFlat = extraRow[1]
                                                         , isExtraArray = extraFlat instanceof Array
                                                         ;
-                                                    if ( isExtraArray )  extraFlat.push ( el )
-                                                    else                 extraFlat['___history'] = el
-                                                    storage.set ( i, extraFlat )
+                                                    if ( isExtraArray ) {
+                                                                extraFlat.push ( el )
+                                                                storage.set ( i, extraFlat )
+                                                        }
+                                                    else  storage.set ( i, [ extraFlat, el ] )
                                                     crumbs.push ( checkIndex )
                                                     linkArr.push ( checkIndex )
                                             }
@@ -59,10 +61,11 @@ function combine ( storage, inData ) {
                                                 inRow[1].forEach ( el => {
                                                             if ( !arr.includes(el) )   arr.push ( el )
                                                         })
-                                                storage.set ( name, arr )                                        
+                                                storage.set ( name, arr )
                                         }
                                     else {
                                                 arr.push ( inRow[1] )
+                                                storage.set ( name, arr )
                                         }
                                 }
                             if ( breadcrumbs.includes('/'))   storage.connect ([breadcrumbs])
@@ -99,15 +102,15 @@ function combine ( storage, inData ) {
                                     }
                                 else {
                                             const isExtraArray = extraData[1] instanceof Array;
-                                            if ( isExtraArray ) { 
+                                            if ( isExtraArray ) {
                                                         storage.set ( k, [])
-                                                        storage.push ( k, v ) 
+                                                        storage.push ( k, v )
                                                         extraData[1].forEach ( el => storage.push (k,el) )
                                                 }
-                                            else  {      
-                                                        storage.set ( k, extraData[1] )
-                                                        storage.save ( k, '___history', v )
+                                            else {
+                                                        storage.set ( k, [ extraData[1], v ] )
                                                 }
+                                            crumbs.push ( checkKey )
                                             storage.connect ([checkKey])
                                     }
                     })
