@@ -1,6 +1,12 @@
 ## Release History
 
 
+
+### 1.1.4 ( 2026-07-17)
+- [x] Dependency update. dt-toolbox@7.4.7;
+
+
+
 ### 1.1.3 ( 2026-07-15)
 - [x] Fix: Added missing build;
 
