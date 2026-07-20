@@ -28,7 +28,7 @@
     "@rollup/plugin-terser": "^1.0.0",
     "c8": "^12.0.0",
     "chai": "^6.2.2",
-    "dt-toolbox": "^7.4.7",
+    "dt-toolbox": "^7.4.8",
     "mocha": "^11.7.6",
     "rollup": "^4.62.2"
   },
