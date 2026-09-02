@@ -1,6 +1,13 @@
 ## Release History
 
 
+### 1.1.6 ( 2026-09-02)
+- [x] Feature: Added a skill at `.agents/skills/git-dt-queries/SKILL.md`;
+- [x] Dependency update. dt-toolbox@7.5.0;
+- [x] Dev dependency update. Mocha@12.0.0;
+
+
+
 ### 1.1.5 ( 2026-08-12)
 - [x] Dependency update. dt-toolbox@7.4.9;
 
