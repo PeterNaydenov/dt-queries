@@ -1,6 +1,12 @@
 ## Release History
 
 
+
+### 1.1.7 ( 2026-10-14)
+- [x] Dependency update. dt-toolbox@8.0.0;
+
+
+
 ### 1.1.6 ( 2026-09-02)
 - [x] Feature: Added a skill at `.agents/skills/git-dt-queries/SKILL.md`;
 - [x] Dependency update. dt-toolbox@7.5.0;
