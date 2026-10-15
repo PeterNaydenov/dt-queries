@@ -2,6 +2,11 @@
 
 
 
+### 1.1.8 ( 2026-10-14)
+- [x] Dependency update. dt-toolbox@8.1.2;
+
+
+
 ### 1.1.7 ( 2026-10-14)
 - [x] Dependency update. dt-toolbox@8.0.0;
 
