@@ -5,22 +5,13 @@
  * @returns void - Result is stored in the 'store' instance
  */
 function joinSegments ( store ) {
-        const linkBuffer = {};
         store.look ( ({
-                          name
-                        , flatData
+                          flatData
                         , breadcrumbs
-                        , links
                         , next
                     }) => {
-                        store.set ( name, flatData )
-                        if ( name === 'root'      )   return next ()
-                        if ( name === breadcrumbs )   store.connect ([`root/${name}`])
-                        links.forEach ( ([parent, child]) =>  linkBuffer[child] = [ parent, child ]   )
-                        if ( linkBuffer[name] ) {
-                                const [parent, child] = linkBuffer[name];
-                                store.connect ( [`${parent}/${child}`])
-                            }
+                        const inRoot = ( breadcrumbs === 'root' || breadcrumbs.startsWith ( 'root/' ) );
+                        store.set ( inRoot ? breadcrumbs : `root/${breadcrumbs}`, flatData )   // Segments go under the 'root'
                         return next ()
             }) // look
 } // joinSegments func.
