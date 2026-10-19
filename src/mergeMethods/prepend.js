@@ -4,38 +4,60 @@
  *    - use all data structures from the original;
  *    - combine incoming and original values for equal keys;
  *    - if original data structure was changed, ignore that change;
- *    - arrays - Extend existing array with the new values;
+ *    - arrays - New values go at the start of the existing array. Objects and arrays in the array keep their order;
  */
+
+import pathMap     from '../helpers/pathMap.js'
+import arrayLength from '../helpers/arrayLength.js'
+
 
 
 function prepend ( storage, inData ) {
-    storage.look ( ({ name, flatData, breadcrumbs, next }) => {
+    const paths = pathMap ();   // Items of the original array move after the new values
+    storage.look ( ({ flatData, breadcrumbs, links, next }) => {
                 const 
                       inRow = inData.index(breadcrumbs)
                     , isArray = flatData instanceof Array
+                    , path = paths.path ( breadcrumbs )
                     ;
 
                 if ( !inRow ) { //
-                            storage.set ( name, flatData )
-                            if ( breadcrumbs.includes('/') )   storage.connect([breadcrumbs])
+                            storage.set ( path, flatData )
                             return next ()
                     }
 
                 const
-                      [ , inFlat ] = inRow
+                      [ , inFlat, , inEdges ] = inRow
                     , inIsArray = inFlat instanceof Array
-                    , arr = isArray  ? [ ... flatData ] : []
                     ;
                 
-                if ( isArray != inIsArray ) {
-                            storage.set ( name, inFlat )
+                if ( isArray != inIsArray ) {   // Structure was changed: keep the original
+                            storage.set ( path, flatData )
                     }
                 else if ( isArray ) {
-                            let inEntries = Object.entries ( inFlat );
-                            inEntries.forEach ( ([k,v]) => {
-                                            if ( !arr.includes(v) )   arr.push ( v )
+                            const
+                                  items   = new Set ( links.map ( ([,child]) => +child ) )   // Indexes of items with own dt-lines (objects, arrays)
+                                , inItems = new Set ( inEdges.map ( br => +br.slice ( br.lastIndexOf('/') + 1 ) ) )
+                                , length  = arrayLength ( flatData, items )
+                                , orig = []
+                                , has  = new Set ()
+                                , news = []
+                                ;
+                            for ( let i = 0; i < length; i++ ) {
+                                        if ( items.has(i) || !(i in flatData) ) {   // Keep the place of the item
+                                                    orig.push ( null )
+                                                    continue
+                                            }
+                                        orig.push ( flatData[i] )
+                                        has.add ( flatData[i] )
+                                }
+                            inFlat.forEach ( (v,i) => {
+                                            if ( inItems.has(i) || has.has(v) )   return
+                                            news.push ( v )
+                                            has.add ( v )
                                     })
-                            storage.set ( name, arr )
+                            items.forEach ( i => paths.move ( breadcrumbs, i, i + news.length ) )
+                            storage.set ( path, [ ...news, ...orig ] )
                     }
                 else {
                             const 
@@ -46,9 +68,8 @@ function prepend ( storage, inData ) {
                                         if ( inFlat.hasOwnProperty(k) )   obj[k] = `${inFlat[k]},${v}`
                                         else                              obj[k] = v
                                     })
-                            storage.set ( name, obj )
+                            storage.set ( path, obj )
                     }
-                if ( breadcrumbs.includes('/') )   storage.connect([breadcrumbs])
                 return next ()
         }) // look storage
 } // prepend func.
