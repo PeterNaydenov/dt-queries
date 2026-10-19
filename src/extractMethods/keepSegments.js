@@ -13,22 +13,22 @@ function keepSegments ( flatStore, keepRequest=[] ) {
                     
         const 
                   keepList = segmentNames.filter ( name => keepRequest.includes ( name )   )
-                , noSegments = keepList.length === 0
                 , isSingleSegment = keepList.length === 1
+                , noRoot = !isSingleSegment && !keepList.includes ( 'root' )   // No segments, or more segments without the 'root': the 'root' is empty
                 ;
-        if ( noSegments )   ( rootType === 'array' ) ? flatStore.set ( 'root', [] ) : flatStore.set ( 'root', {} )
-        keepList.forEach ( name => {
-                let linksBuf = [];
+        if ( noRoot )   ( rootType === 'array' ) ? flatStore.set ( 'root', [] ) : flatStore.set ( 'root', {} )
+        keepList.forEach ( segment => {
+                const prefix = `${segment}/`;
                 flatStore
-                   .from ( name )
-                   .look ( ({ name, flatData, breadcrumbs,links,next  }) => {
-                                        if ( name === breadcrumbs && isSingleSegment )   flatStore.set ( 'root', flatData )
-                                        else                                             flatStore.set ( name  , flatData )
-                                        const ls = isSingleSegment ? links.map ( ([k,v]) => `root/${v}`) : links.map ( ([k,v]) => `${k}/${v}`);
-                                        linksBuf = [ ...linksBuf, ...ls ]
+                   .from ( segment )
+                   .look ( ({ flatData, breadcrumbs, next  }) => {
+                                        let path = breadcrumbs;
+                                        if ( isSingleSegment ) {   // A single segment becomes the 'root'
+                                                    path = ( breadcrumbs === segment ) ? 'root' : `root/${breadcrumbs.slice ( prefix.length )}`
+                                            }
+                                        flatStore.set ( path, flatData )
                                         return next ()
                         })
-                flatStore.connect ( linksBuf )
             })
 } // keepSegments func.
 
