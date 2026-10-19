@@ -98,7 +98,7 @@ it ( 'Add', () => {
 
 it ( 'Update', () => {
   /**
-   *   Update: Result will ignore all new props and will update existing ones.
+   *   Update: Which keys of the original data are changed, and how. New keys are ignored.
    */
   const 
           flat = dtbox.init ( a )
@@ -115,27 +115,17 @@ it ( 'Update', () => {
                                     }
                 }
         ;
-  const 
-        res  = flat.query ( update, dtbox.init(changed)   )
-      , data = res.model ( () => ({as:'std'}))
-      ;
-
-  expect ( data.name ).to.be.equal ( 'Stefan' )
-  expect ( data ).to.not.have.property ( 'change' )
-  expect ( data.friends ).to.have.length ( 1 )
-  expect ( data.friends ).to.contains ( 'Miroslav' )
-
-  expect ( data.personal).to.have.property ( 'eyes' )
-  expect ( data.personal).to.have.property ( 'sizes' )
-  expect ( data.personal).to.have.property ( 'hobbies' )
-
-  expect ( data.personal.hobbies ).to.have.property ( 'music')
-  expect ( data.personal.hobbies ).to.have.property ( 'sport')
-  expect ( data.personal.hobbies ).to.not.have.property ( 'photography' )
-
-  expect ( data.personal.hobbies.sport ).to.have.length ( 4 )
-  expect ( data.personal.hobbies.sport[0] ).to.be.equal ( 'ski' )
-  expect ( data.personal.hobbies.music ).to.have.length ( 4 )
+  const res = flat.query ( update, dtbox.init(changed) );
+  expect ( res.copy() ).to.deep.equal ({
+                  name    : 'Stefan'                          // Changed
+                , friends : [ 'Miroslav' ]                    // Index 0 changed. Other places are not in the update
+                , personal : {
+                                  age : 30                    // 'eyes' and 'sizes' are not in the update
+                                , hobbies : {
+                                                sport : [ 'ski', 'fencing', 'skating' ]   // 'running' is on a new place, 'music' is not in the update
+                                            }
+                            }
+            })                                                // 'change' and 'photography' are new
 })
 
 
@@ -203,7 +193,7 @@ it ( 'Insert', () => {
 
 expect ( data.name ).to.be.equal ( 'Peter' )
 expect ( data ).to.not.have.property ( 'change' )
-expect ( data.friends ).to.have.length ( 4 )
+expect ( data.friends ).to.have.length ( 3 )   // 'friends' became an object in the update: a changed structure is ignored
 
 const hobbies = data.personal.hobbies;
 expect ( data.personal.age ).to.be.equal ( 49 )

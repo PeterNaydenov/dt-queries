@@ -22,6 +22,15 @@ import {
             , missing
             , same
             , add
+            , combine
+            , updateState
+            , append
+            , prepend
+            , overwrite
+            , insert
+            , keepSegments
+            , removeSegments
+            , splitSegments
         } from '../src/main.js'
 
 
@@ -281,3 +290,233 @@ describe ( 'Bug fix: add input validation', () => {
         expect ( m ).to.have.property('extra', 1)              // new key added
     })
 })
+
+
+
+describe ( 'Bug fix: combine with data missing in the incoming object', () => {
+
+    it ( 'does not throw when an object is not in the incoming data', () => {
+        const r = dtbox.init({ a: { x: 1 } }).query ( combine, dtbox.init({ b: 1 }) );
+        expect ( r.copy() ).to.deep.equal ({ a: { x: 1 }, b: 1 })
+    })
+
+    it ( 'does not throw when the parent of an array is not in the incoming data', () => {
+        const r = dtbox.init({ a: { l: [ 1 ] } }).query ( combine, dtbox.init({ b: 1 }) );
+        expect ( r.copy() ).to.deep.equal ({ a: { l: [ 1 ] }, b: 1 })
+    })
+}) // describe
+
+
+
+describe ( 'Bug fix: updateState takes a root property from the changes', () => {
+
+    it ( 'replaces a state segment with the root property of the changes', () => {
+        const state = dtbox.init ({ theme: 'dark' });
+        state.insertSegment ( 'user', { name: 'Ivan' } )
+        const r = state.query ( updateState, dtbox.init({ user: 'guest' }) );
+        expect ( r.listSegments() ).to.deep.equal ([ 'root' ])
+        expect ( r.copy() ).to.deep.equal ({ theme: 'dark', user: 'guest' })
+    })
+}) // describe
+
+
+
+describe ( 'Bug fix: strict comparison in identical and missing', () => {
+
+    it ( 'identical: values of different types are not identical', () => {
+        const r = dtbox.init({ n: 1, z: 0, t: true, s: 'a' }).query ( identical, dtbox.init({ n: '1', z: '', t: 1, s: 'a' }) );
+        expect ( r.copy() ).to.deep.equal ({ s: 'a' })
+    })
+
+    it ( 'identical: a key missing in the update is not identical, also when the value is null', () => {
+        const r = dtbox.init({ e: null, s: 'a' }).query ( identical, dtbox.init({ s: 'a' }) );
+        expect ( r.copy() ).to.deep.equal ({ s: 'a' })
+    })
+
+    it ( 'missing: a key with value null in the update is not missing', () => {
+        const r = dtbox.init({ a: 1, e: null, x: 3 }).query ( missing, dtbox.init({ a: 2, e: null }) );
+        expect ( r.copy() ).to.deep.equal ({ x: 3 })
+    })
+}) // describe
+
+
+
+describe ( 'Bug fix: append and prepend', () => {
+
+    it ( 'append, prepend: a changed structure keeps the original', () => {
+        expect ( dtbox.init({ o: { a: 1 } }).query ( append , dtbox.init({ o: [ 1 ] }) ).copy() ).to.deep.equal ({ o: { a: 1 } })
+        expect ( dtbox.init({ o: [ 1 ] }).query ( prepend, dtbox.init({ o: { a: 1 } }) ).copy() ).to.deep.equal ({ o: [ 1 ] })
+    })
+
+    it ( 'prepend: new array values go at the start', () => {
+        const r = dtbox.init({ l: [ 1, 2 ] }).query ( prepend, dtbox.init({ l: [ 3, 1, 4 ] }) );
+        expect ( r.copy() ).to.deep.equal ({ l: [ 3, 4, 1, 2 ] })
+    })
+
+    it ( 'prepend: object items move after the new values, with their deep structure', () => {
+        const r = dtbox.init({ l: [ 1, { k: { deep: [ { z: 1 } ] } } ] }).query ( prepend, dtbox.init({ l: [ 2 ] }) );
+        expect ( r.copy() ).to.deep.equal ({ l: [ 2, 1, { k: { deep: [ { z: 1 } ] } } ] })
+    })
+
+    it ( 'append: an object at the end of the array is not replaced by a new value', () => {
+        const r = dtbox.init({ l: [ 1, { k: 1 } ] }).query ( append, dtbox.init({ l: [ 2 ] }) );
+        expect ( r.copy() ).to.deep.equal ({ l: [ 1, { k: 1 }, 2 ] })
+    })
+
+    it ( 'append, prepend: objects of the incoming array leave no null', () => {
+        expect ( dtbox.init({ l: [ 1 ] }).query ( append , dtbox.init({ l: [ 2, { k: 1 }, 3 ] }) ).copy() ).to.deep.equal ({ l: [ 1, 2, 3 ] })
+        expect ( dtbox.init({ l: [ 1 ] }).query ( prepend, dtbox.init({ l: [ 2, { k: 1 }, 3 ] }) ).copy() ).to.deep.equal ({ l: [ 2, 3, 1 ] })
+    })
+}) // describe
+
+
+
+describe ( 'Bug fix: change shows where the changes are', () => {
+
+    it ( 'a structure that became a primitive shows the new value', () => {
+        expect ( dtbox.init({ a: { x: 1 }, k: 0 }).query ( change, dtbox.init({ a: 2, k: 0 }) ).copy() ).to.deep.equal ({ a: 2 })
+        expect ( dtbox.init({ o: { a: { x: { y: 1 } } } }).query ( change, dtbox.init({ o: { a: 5 } }) ).copy() ).to.deep.equal ({ o: { a: 5 } })
+    })
+
+    it ( 'a primitive that became a structure shows the new structure', () => {
+        const r = dtbox.init({ a: 1, k: 0 }).query ( change, dtbox.init({ a: { x: { y: 1 } }, k: 0 }) );
+        expect ( r.copy() ).to.deep.equal ({ a: { x: { y: 1 } } })
+    })
+
+    it ( 'an array that lost or got an object at the end is changed', () => {
+        expect ( dtbox.init({ l: [ 1, { k: 1 } ] }).query ( change, dtbox.init({ l: [ 1 ] }) ).copy() ).to.deep.equal ({ l: [ 1 ] })
+        expect ( dtbox.init({ l: [ 1 ] }).query ( change, dtbox.init({ l: [ 1, { k: 1 } ] }) ).copy() ).to.deep.equal ({ l: [ 1, { k: 1 } ] })
+    })
+}) // describe
+
+
+
+describe ( 'Bug fix: overwrite', () => {
+
+    it ( 'a structure that became a primitive takes the incoming value', () => {
+        expect ( dtbox.init({ a: { x: 1 }, k: 0 }).query ( overwrite, dtbox.init({ a: 2 }) ).copy() ).to.deep.equal ({ a: 2, k: 0 })
+    })
+
+    it ( "extend mode ('...'): new objects go to the end, the original objects stay", () => {
+        const r = dtbox.init({ l: [ 1, { a: 1 } ] }).query ( overwrite, dtbox.init({ l: [ '...', { b: { deep: [ { z: 1 } ] } } ] }) );
+        expect ( r.copy() ).to.deep.equal ({ l: [ 1, { a: 1 }, { b: { deep: [ { z: 1 } ] } } ] })
+    })
+
+    it ( "extend mode ('...'): a new value is not replaced by an original object at the end", () => {
+        const r = dtbox.init({ l: [ 1, { a: 1 } ] }).query ( overwrite, dtbox.init({ l: [ '...', 2 ] }) );
+        expect ( r.copy() ).to.deep.equal ({ l: [ 1, { a: 1 }, 2 ] })
+    })
+}) // describe
+
+
+
+describe ( 'Bug fix: identical with a structure that became a primitive', () => {
+
+    it ( 'the key is not identical, so it is absent', () => {
+        const r = dtbox.init({ a: { x: 1 }, k: 0 }).query ( identical, dtbox.init({ a: 2, k: 0 }) );
+        expect ( r.copy() ).to.deep.equal ({ k: 0 })
+    })
+}) // describe
+
+
+
+describe ( 'missing: original keys that the update does not mention', () => {
+
+    it ( 'returns the keys that the update does not have, with original values', () => {
+        expect ( dtbox.init({ a: 12, b: 44 }).query ( missing, dtbox.init({ b: 64 }) ).copy() ).to.deep.equal ({ a: 12 })
+    })
+
+    it ( 'a key that the update has in another form is not missing', () => {
+        expect ( dtbox.init({ a: 1, k: 0 }).query ( missing, dtbox.init({ a: { x: 1 } }) ).copy() ).to.deep.equal ({ k: 0 })
+        expect ( dtbox.init({ a: { x: 1 }, k: 0 }).query ( missing, dtbox.init({ a: 2 }) ).copy() ).to.deep.equal ({ k: 0 })
+        expect ( dtbox.init({ o: { x: 1 }, k: 0 }).query ( missing, dtbox.init({ o: [ 1 ] }) ).copy() ).to.deep.equal ({ k: 0 })
+    })
+
+    it ( 'a structure that the update does not have is missing with all its data', () => {
+        expect ( dtbox.init({ o: { x: 1, d: [ 1 ] }, k: 0 }).query ( missing, dtbox.init({ k: 1 }) ).copy() ).to.deep.equal ({ o: { x: 1, d: [ 1 ] } })
+    })
+}) // describe
+
+
+
+describe ( 'Bug fix: combine keeps all values', () => {
+
+    it ( 'an object and a value become a pair [ incoming, original ]', () => {
+        expect ( dtbox.init({ a: { x: 1 }, k: 0 }).query ( combine, dtbox.init({ a: 2 }) ).copy() ).to.deep.equal ({ a: [ 2, { x: 1 } ], k: 0 })
+        expect ( dtbox.init({ a: 1 }).query ( combine, dtbox.init({ a: { x: { y: 1 } } }) ).copy() ).to.deep.equal ({ a: [ { x: { y: 1 } }, 1 ] })
+    })
+
+    it ( 'an object and an array become a pair [ incoming, original ]', () => {
+        const r = dtbox.init({ o: { x: 1 } }).query ( combine, dtbox.init({ o: [ 5, { m: { n: 1 } } ] }) );
+        expect ( r.copy() ).to.deep.equal ({ o: [ [ 5, { m: { n: 1 } } ], { x: 1 } ] })
+    })
+
+    it ( 'an array takes a value in, and its objects keep their place', () => {
+        expect ( dtbox.init({ a: 1 }).query ( combine, dtbox.init({ a: [ { x: 1 }, 2 ] }) ).copy() ).to.deep.equal ({ a: [ 1, { x: 1 }, 2 ] })
+        expect ( dtbox.init({ l: [ 1, 5 ] }).query ( combine, dtbox.init({ l: [ [ 7, { y: 1 } ], 5 ] }) ).copy() ).to.deep.equal ({ l: [ [ 7, { y: 1 }, 1 ], 5 ] })
+    })
+}) // describe
+
+
+
+describe ( 'Bug fix: insert', () => {
+
+    it ( 'a new value is not replaced by an original object at the end of the array', () => {
+        expect ( dtbox.init({ l: [ 1, { k: 1 } ] }).query ( insert, dtbox.init({ l: [ 3 ] }) ).copy() ).to.deep.equal ({ l: [ 1, { k: 1 }, 3 ] })
+    })
+
+    it ( 'new objects in arrays and in new arrays come with their data', () => {
+        expect ( dtbox.init({ l: [ 1 ] }).query ( insert, dtbox.init({ l: [ 2, { k: { d: 1 } }, 3 ] }) ).copy() ).to.deep.equal ({ l: [ 1, 2, { k: { d: 1 } }, 3 ] })
+        expect ( dtbox.init({ a: 1 }).query ( insert, dtbox.init({ n: [ 1, { d: 1 } ], o: { x: 1 } }) ).copy() ).to.deep.equal ({ a: 1, n: [ 1, { d: 1 } ] })
+    })
+
+    it ( 'a changed structure is ignored', () => {
+        expect ( dtbox.init({ l: [ 1 ] }).query ( insert, dtbox.init({ l: { x: 5 } }) ).copy() ).to.deep.equal ({ l: [ 1 ] })
+    })
+}) // describe
+
+
+
+describe ( 'keepSegments, removeSegments: the result always has a root', () => {
+    const mk = () => { const d = dtbox.init({ a: 1 }); d.insertSegment ( 's1', { b: 2 } ); d.insertSegment ( 's2', { d: 3 } ); return d };
+
+    it ( 'more segments without the root get an empty root', () => {
+        const k = mk().query ( keepSegments, [ 's1', 's2' ] );
+        expect ( k.listSegments() ).to.deep.equal ([ 'root', 's1', 's2' ])
+        expect ( k.copy('root') ).to.deep.equal ({})
+        const r = mk().query ( removeSegments, [ 'root' ] );
+        expect ( r.listSegments() ).to.deep.equal ([ 'root', 's1', 's2' ])
+        expect ( r.copy('root') ).to.deep.equal ({})
+    })
+}) // describe
+
+
+
+describe ( 'Bug fix: splitSegments does not lose segments', () => {
+
+    it ( 'a root structure with the name of an existing segment stays in the root', () => {
+        const dt = dtbox.init ({ o: { x: { deep: 1 } }, p: { y: 1 } });
+        dt.insertSegment ( 'o', { y: 2 } )
+        const r = dt.query ( splitSegments );
+        expect ( r.listSegments().sort() ).to.deep.equal ([ 'o', 'p', 'root' ])
+        expect ( r.copy('root') ).to.deep.equal ({ o: { x: { deep: 1 } } })
+        expect ( r.copy('o') ).to.deep.equal ({ y: 2 })
+        expect ( r.copy('p') ).to.deep.equal ({ y: 1 })
+    })
+}) // describe
+
+
+
+describe ( 'Bug fix: updateState keeps structures of the state root', () => {
+    const state = () => { const d = dtbox.init({ theme: 'dark', o: { x: 1, d: [ 1, { z: 1 } ] } }); d.insertSegment ( 'user', { name: 'Ivan' } ); return d };
+
+    it ( 'keeps a root structure that the changes do not have', () => {
+        const r = state().query ( updateState, dtbox.init({ theme: 'light' }) );
+        expect ( r.copy('root') ).to.deep.equal ({ theme: 'light', o: { x: 1, d: [ 1, { z: 1 } ] } })
+    })
+
+    it ( 'takes a root structure from the changes, whole', () => {
+        const r = state().query ( updateState, dtbox.init({ o: { y: [ 2 ] } }) );
+        expect ( r.copy('root') ).to.deep.equal ({ theme: 'dark', o: { y: [ 2 ] } })
+    })
+}) // describe

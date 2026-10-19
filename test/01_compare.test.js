@@ -200,45 +200,21 @@ it ( 'Different', () => {
                                         }
                     }
             ;
-        const 
-              res  = flat.query ( different, dtbox.init(changed), flat.index )
-            , data = res.export ()
-            ;
-        let 
-              i = 0
-            , j = 0
-            ;
-        data.forEach ( line => {
-                        const [ name, fd ] = line;
-                        if ( name === 'root' ) {
-                                    expect ( fd ).to.have.property ( 'name' )
-                                    expect ( fd.name ).to.be.equal ( 'Stefan' ) 
-                                    expect ( fd ).to.have.property ( 'change' )
-                                    i++
-                            }
-                        if ( name === 'friends' ) {
-                                    // Compare original to a new array. If they are not equal -> take the new array. 
-                                    // Reason to take structure instead of the members: Position in array may be important.
-                                    expect ( fd ).to.have.length ( 2 )
-                                    expect ( fd ).to.contains ( 'Miroslav')
-                                    expect ( fd ).to.contains ( 'Ivan')
-                                    i++
-                            }
-                        if ( name === 'sport'  )   j++
-                        if ( name === 'sports' ) {
-                                    expect ( fd ).to.contains ( 'fencing' )
-                                    expect ( fd ).to.contains ( 'skating' )
-                                    expect ( fd ).to.contains ( 'ski' )
-                                    expect ( fd ).to.contains ( 'running' )
-                                    i++
-                            }
-                        if ( name === 'photography' ) {
-                                    expect ( fd ).to.contains ( 'photoshop' )
-                                    i++
-                            }
-            }) // forEach line
-        expect ( i ).to.be.equal ( 4 )
-        expect ( j ).to.be.equal ( 0 )
+        const res = flat.query ( different, dtbox.init(changed), flat.index );
+        expect ( res.copy() ).to.deep.equal ({
+                      name    : 'Stefan'                                        // Changed value
+                    , change  : 'yes'                                           // New key
+                    , friends : [ undefined, 'Miroslav' ]                       // Changed value keeps its place
+                    , personal : {
+                                      age   : 30                                // 'eyes' has no difference
+                                    , sizes : [ undefined, undefined, 'miss', undefined, 'mm' ]
+                                    , hobbies : {
+                                                      music  : []               // Structure without differences
+                                                    , sports : [ 'fencing', 'skating', 'ski', 'running' ]   // New structures come with all their data
+                                                    , photography : [ 'retouch', 'photoshop', 'portrait' ]
+                                                }
+                                }
+                })
 }) // it different
 
 
@@ -296,9 +272,9 @@ it ( 'Missing', () => {
 
 it ( 'Same', () => {
   /**
-   *   Should show data available in update according original data.
-   *  - no consideration of existing values
-   *  - no value-comparecent
+   *   Keeps the structure of the original data, takes primitive values from the update.
+   *  - keys and array lengths stay as in the original
+   *  - new keys and structures of the update are not applied
    */
         const 
               flat = dtbox.init ( a )
@@ -316,43 +292,20 @@ it ( 'Same', () => {
                                         }
                     }
             ;
-      const 
-              res  = flat.query ( same, dtbox.init(changed) )
-            , data = res.export ()
-            ;
-      let 
-            i = 0
-          , j = 0
-          ;
-      data.forEach ( line => {
-                  const [ name, fd ] =  line;
-
-                  if ( name === 'root' ) {
-                            expect ( fd ).to.not.have.property ( 'name' )
-                            i++
-                      }
-                  if ( name === 'personal' ) {
-                            expect ( fd ).to.have.property ( 'age' )
-                            expect ( fd ).to.have.property ( 'eyes' )
-                            i++
-                      }
-                  if ( name === 'friends' ) {
-                            expect ( fd ).to.have.length ( 0 )
-                            i++
-                      }
-                  if ( name === 'sport'   ) {
-                            expect ( fd ).to.have.length ( 0 )
-                            i++
-                      }
-                  if ( name === 'sports' )   j++
-                  if ( name === 'music' ) {
-                            expect ( fd ).to.have.length ( 2 )
-                            i++
-                      }
-
-          })
-      expect ( i ).to.be.equal ( 5 )
-      expect ( j ).to.be.equal ( 0 )
+      const res = flat.query ( same, dtbox.init(changed) );
+      expect ( res.copy() ).to.deep.equal ({
+                    name: 'Peter'                                          // No update: original value
+                  , friends : [ 'Ivan', 'Dobroslav', 'Stefan' ]            // No update: original array
+                  , personal : {
+                                    age     : 30
+                                  , eyes    : 'blue'
+                                  , sizes   : [ 10, 44, 'miss', 'mid' ]   // Same length, values on the same place
+                                  , hobbies : {
+                                                    music : [ 'metal', 'guitar', 'metal', 'guitar' ]   // Shorter update: the rest stays
+                                                  , sport : [ 'fencing', 'skating', 'ski' ]            // 'sports' and 'photography' are new
+                                              }
+                              }
+              })                                                        // 'change' is a new key
 }) // it same
 
 }) // describe
